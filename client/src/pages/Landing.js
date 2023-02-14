@@ -17,9 +17,9 @@ function Landing() {
                     <p>
                         I'm baby big mood pour-over quinoa venmo jianbing. Flexitarian squid man bun praxis yes plz gentrify try-hard enamel pin 8-bit tumblr pour-over ramps ennui lomo. Wayfarers post-ironic dreamcatcher authentic, skateboard gluten-free flexitarian kombucha single-origin coffee kitsch.uihasd aiusdhasuhdf aiusdf aiusdh xkjzcvniuhs dfiujcvkn zxciuv ha
                     </p>
-                    <Link to="/register" className='btn btn-hero'>Login/Register</Link>
+                    <Link to='/register' className='btn btn-hero'>Login/Register</Link>
                 </div>
-                <img src={main} alt="job hunt" className='img main-img' />
+                <img src={main} alt='job hunt' className='img main-img' />
             </div>
         </Wrapper>
     )
