@@ -13,7 +13,7 @@ const initialState = {
 function Register() {
     const [values, setValues] = useState(initialState)
     // global state and useNavigate
-    const { isLoading, showAlert, displayAlert } = useAppContext()
+    const { isLoading, showAlert, displayAlert, clearAlert } = useAppContext()
 
     const toggleMember = () => {
         setValues({ ...values, isMember: !values.isMember })
@@ -25,8 +25,8 @@ function Register() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const {name, email, password, isMember} = values
-        if(!email || !password || (!isMember && !name)) {
+        const { name, email, password, isMember } = values
+        if (!email || !password || (!isMember && !name)) {
             displayAlert()
             return
         }
