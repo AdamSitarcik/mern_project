@@ -1,36 +1,36 @@
-import { useState, useEffect } from 'react'
-import { Logo, FormRow, Alert } from '../components'
-import Wrapper from '../assets/wrappers/RegisterPage'
-import { useAppContext } from '../context/appContext'
+import { useState, useEffect } from 'react';
+import { Logo, FormRow, Alert } from '../components';
+import Wrapper from '../assets/wrappers/RegisterPage';
+import { useAppContext } from '../context/appContext';
 
 const initialState = {
     name: '',
     email: '',
     password: '',
     isMember: false,
-}
+};
 
 function Register() {
-    const [values, setValues] = useState(initialState)
+    const [values, setValues] = useState(initialState);
     // global state and useNavigate
-    const { isLoading, showAlert, displayAlert, clearAlert } = useAppContext()
+    const { isLoading, showAlert, displayAlert, clearAlert } = useAppContext();
 
     const toggleMember = () => {
         setValues({ ...values, isMember: !values.isMember })
-    }
+    };
 
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value })
-    }
+    };
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const { name, email, password, isMember } = values
+        const { name, email, password, isMember } = values;
         if (!email || !password || (!isMember && !name)) {
-            displayAlert()
-            return
+            displayAlert();
+            return;
         }
-    }
+    };
 
     return (
         <Wrapper className='full-page'>
@@ -48,7 +48,7 @@ function Register() {
                 </p>
             </form>
         </Wrapper>
-    )
+    );
 }
 
-export default Register
+export default Register;
