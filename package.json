@@ -36,7 +36,8 @@
     "shallowequal": "^1.1.0",
     "styled-components": "^5.3.6",
     "supports-color": "^5.5.0",
-    "to-fast-properties": "^2.0.0"
+    "to-fast-properties": "^2.0.0",
+    "validator": "^13.9.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
