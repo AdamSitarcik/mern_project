@@ -13,18 +13,17 @@ import jobsRouter from './routes/jobsRoutes.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
 
-app.use(express.json());
-
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Welcome');
 });
 
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/jobs', authRouter);
+app.use('/api/v1/jobs', jobsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
