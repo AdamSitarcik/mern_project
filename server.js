@@ -1,6 +1,8 @@
 import express from 'express';
-
+const app = express();
 import dotenv from 'dotenv';
+dotenv.config();
+import 'express-async-errors';
 
 // db and authenticateUser
 import connectDB from './db/connect.js';
@@ -13,9 +15,6 @@ import jobsRouter from './routes/jobsRoutes.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
 
-dotenv.config();
-
-const app = express();
 app.use(express.json());
 
 app.get('/', (req, res) => {
