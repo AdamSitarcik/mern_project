@@ -13,6 +13,7 @@ const initialState = {
     alertText: '',
     alertType: '',
     user: user ? JSON.parse(user) : null,
+    // user: null,
     token: token,
     userLocation: userLocation || '',
     jobLocation: userLocation || ''
@@ -60,7 +61,11 @@ const AppProvider = ({ children }) => {
         clearAlert();
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, registerUser }} >
+    const loginUser = async (currentUser) => {
+        console.log(currentUser);
+    }
+
+    return <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser }} >
         {children}
     </AppContext.Provider>;
 };

@@ -14,7 +14,7 @@ const initialState = {
 function Register() {
     const [values, setValues] = useState(initialState);
     const navigate = useNavigate();
-    const { user, isLoading, showAlert, displayAlert, registerUser } = useAppContext();
+    const { user, isLoading, showAlert, displayAlert, registerUser, loginUser } = useAppContext();
 
     const toggleMember = () => {
         setValues({ ...values, isMember: !values.isMember })
@@ -26,15 +26,18 @@ function Register() {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
         const { name, email, password, isMember } = values;
+
         if (!email || !password || (!isMember && !name)) {
             displayAlert();
             return;
         }
+
         const currentUser = { name, email, password };
 
         if (isMember) {
-            console.log('already a member');
+            loginUser(currentUser);
         }
         else {
             registerUser(currentUser);
@@ -54,13 +57,20 @@ function Register() {
             <form className='form' action='' onSubmit={onSubmit}>
                 <Logo />
                 <h3>{values.isMember ? 'Login' : 'Register'}</h3>
+
                 {showAlert && <Alert />}
+
                 {!values.isMember && <FormRow name='name' type='text' value={values.name} labelText='Name' handleChange={handleChange} />}
+
                 <FormRow name='email' type='email' value={values.email} labelText='Email' handleChange={handleChange} />
+
                 <FormRow name='password' type='password' value={values.password} labelText='Password' handleChange={handleChange} />
+
                 <button type='submit' className='btn btn-block' disabled={isLoading}>Submit</button>
+
                 <p>
                     {values.isMember ? 'Not a member yet?' : 'Already a member?'}
+
                     <button type='button' onClick={toggleMember} className='member-btn'>{values.isMember ? 'Register' : 'Login'}</button>
                 </p>
             </form>

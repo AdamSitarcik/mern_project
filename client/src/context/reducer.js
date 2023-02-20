@@ -1,4 +1,4 @@
-import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR } from "./actions";
 
 const reducer = (state, action) => {
     if (action.type === DISPLAY_ALERT) {
@@ -18,8 +18,20 @@ const reducer = (state, action) => {
     }
 
     if (action.type === REGISTER_USER_ERROR) {
-        return { ...state, showAlert: true, alertType: 'danger', alertText: action.payload.msg, isLoading: false}
+        return { ...state, showAlert: true, alertType: 'danger', alertText: action.payload.msg, isLoading: false }
     }
+
+    // if(action.type === ) {
+
+    // }
+
+    // if(action.type === ) {
+
+    // }
+
+    // if(action.type === ) {
+
+    // }
 
     throw new Error(`no such action ${action.type}`);
 };
