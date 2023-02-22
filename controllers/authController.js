@@ -29,21 +29,21 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email }).select('+password');
 
-    if(!user) {
+    if (!user) {
         throw new UnauthenticatedError('Invalid credentials');
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
 
-    if(!isPasswordCorrect) {
+    if (!isPasswordCorrect) {
         throw new UnauthenticatedError('Invalid credentials');
     }
 
     const token = user.createJWT();
 
     user.password = undefined;
-    
-    res.status(StatusCodes.OK).json({user,token,location:user.location});
+
+    res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 
 const updateUser = async (req, res) => {
