@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -56,6 +56,7 @@ const AppProvider = ({ children }) => {
             });
             addUserToLocalStorage({ user, token, location });
         } catch (error) {
+            console.log(error);
             dispatch({
                 type: SETUP_USER_ERROR, payload: { msg: error.response.data.msg }
             });
@@ -64,10 +65,15 @@ const AppProvider = ({ children }) => {
     };
 
     const toggleSidebar = () => {
-        dispatch({type:TOGGLE_SIDEBAR});
+        dispatch({ type: TOGGLE_SIDEBAR });
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar }} >
+    const logoutUser = () => {
+        dispatch({ type: LOGOUT_USER });
+        removeUserFromLocalStorage();
+    };
+
+    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser }} >
         {children}
     </AppContext.Provider>;
 };
