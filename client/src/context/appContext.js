@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -37,9 +37,8 @@ const AppProvider = ({ children }) => {
     authFetch.interceptors.response.use((response) => {
         return response;
     }, (error) => {
-        console.log(error.response);
         if (error.response.status === 401) {
-            console.log('AUTH ERROR');
+            logoutUser();
         }
         return Promise.reject(error);
     });
@@ -94,12 +93,19 @@ const AppProvider = ({ children }) => {
     };
 
     const updateUser = async (currentUser) => {
+        dispatch({ type: UPDATE_USER_BEGIN });
         try {
             const { data } = await authFetch.patch('/auth/updateUser', currentUser);
-            console.log(data);
+
+            const { user, location, token } = data;
+            dispatch({ type: UPDATE_USER_SUCCESS, payload: { user, location, token } });
+            addUserToLocalStorage({ user, location, token });
         } catch (error) {
-                // console.log(error.response);
+            if (error.response.status !== 401) {
+                dispatch({ type: UPDATE_USER_ERROR, payload: { msg: error.response.data.msg } });
+            }
         }
+        clearAlert();
     };
 
     return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser }} >
