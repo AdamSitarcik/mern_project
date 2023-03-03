@@ -4,7 +4,7 @@ import Wrapper from '../../assets/wrappers/DashboardFormPage';
 
 
 function AddJob() {
-        const { showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing, handleChange, clearValues } = useAppContext();
+    const { isLoading, showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing, handleChange, clearValues, createJob } = useAppContext();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -12,7 +12,10 @@ function AddJob() {
             displayAlert();
             return;
         }
-        console.log('create job');
+        if (isEditing) {
+            return;
+        }
+        createJob();
     };
 
     const handleJobInput = (e) => {
@@ -32,7 +35,7 @@ function AddJob() {
                 <FormRowSelect name='status' value={status} handleChange={handleJobInput} list={statusOptions} />
                 <FormRowSelect name='jobType' value={jobType} handleChange={handleJobInput} list={jobTypeOptions} labelText='job type' />
                 <div className="btn-container">
-                    <button type="submit" className="btn btn-block submit-btn">
+                    <button type="submit" className="btn btn-block submit-btn" disabled={isLoading}>
                         submit
                     </button>
                     <button className="btn btn-block clear-btn" onClick={(e) => {

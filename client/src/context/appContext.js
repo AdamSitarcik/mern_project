@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -85,9 +85,8 @@ const AppProvider = ({ children }) => {
             addUserToLocalStorage({ user, token, location });
         } catch (error) {
             console.log(error);
-            dispatch({
-                type: SETUP_USER_ERROR, payload: { msg: error.response.data.msg }
-            });
+            dispatch({ type: SETUP_USER_ERROR, payload: { msg: error.response.data.msg } }
+            );
         }
         clearAlert();
     };
@@ -125,7 +124,21 @@ const AppProvider = ({ children }) => {
         dispatch({ type: CLEAR_VALUES });
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues }} >
+    const createJob = async () => {
+        dispatch({ type: CREATE_JOB_BEGIN });
+        try {
+            const { position, company, jobLocation, jobType, status } = state;
+            await authFetch.post('/jobs', { position, company, jobLocation, jobType, status });
+            dispatch({ type: CREATE_JOB_SUCCESS });
+            dispatch({ type: CLEAR_VALUES });
+        } catch (error) {
+            if (error.response.status === 401) return;
+            dispatch({ type: CREATE_JOB_ERROR, payload: { msg: error.response.data.msg } });
+        }
+        clearAlert();
+    };
+
+    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob }} >
         {children}
     </AppContext.Provider>;
 };
