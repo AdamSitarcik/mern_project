@@ -1,4 +1,4 @@
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES } from "./actions";
 import { initialState } from "./appContext";
 
 const reducer = (state, action) => {
@@ -40,6 +40,23 @@ const reducer = (state, action) => {
 
     if (action.type === UPDATE_USER_ERROR) {
         return { ...state, isLoading: false, showAlert: true, alertType: 'danger', alertText: action.payload.msg };
+    }
+
+    if (action.type === HANDLE_CHANGE) {
+        return { ...state, [action.payload.name]: action.payload.value };
+    }
+
+    if (action.type === CLEAR_VALUES) {
+        const initialState = {
+            isEditing: false,
+            editJobId: '',
+            position: '',
+            company: '',
+            jobType: 'full-time',
+            status: 'pending',
+            jobLocation: state.userLocation
+        };
+        return { ...state, ...initialState };
     }
 
     throw new Error(`no such action ${action.type}`);
