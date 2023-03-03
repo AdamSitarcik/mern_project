@@ -1,6 +1,6 @@
-import React, { useState, useReducer, useContext } from "react";
+import React, { useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -24,7 +24,11 @@ const initialState = {
     jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
     jobType: 'full-time',
     statusOptions: ['interview', 'declined', 'pending'],
-    status: 'pending'
+    status: 'pending',
+    jobs: [],
+    totalJobs: 0,
+    numOfPages: 1,
+    page: 1
 
 };
 
@@ -138,7 +142,20 @@ const AppProvider = ({ children }) => {
         clearAlert();
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob }} >
+    const getJobs = async () => {
+        let url = `/jobs`;
+        dispatch({ type: GET_JOBS_BEGIN });
+        try {
+            const { data } = await authFetch.get(url);
+            const { jobs, totalJobs, numOfPages } = data;
+            dispatch({ type: GET_JOBS_SUCCESS, payload: { jobs, totalJobs, numOfPages } });
+        } catch (error) {
+            console.log(error.response);
+        }
+        clearAlert();
+    };
+
+    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob, getJobs }} >
         {children}
     </AppContext.Provider>;
 };
