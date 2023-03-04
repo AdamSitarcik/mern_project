@@ -151,6 +151,7 @@ const AppProvider = ({ children }) => {
             dispatch({ type: GET_JOBS_SUCCESS, payload: { jobs, totalJobs, numOfPages } });
         } catch (error) {
             console.log(error.response);
+            // logoutUser();
         }
         clearAlert();
     };
