@@ -1,6 +1,11 @@
-function JobInfo() {
+import Wrapper  from "../assets/wrappers/JobInfo"
+
+function JobInfo({icon,text}) {
   return (
-    <div><h2>job info</h2></div>
+    <Wrapper>
+      <span className="icon">{icon}</span>
+      <span className="text">{text}</span>
+    </Wrapper>
   )
 }
 export default JobInfo
