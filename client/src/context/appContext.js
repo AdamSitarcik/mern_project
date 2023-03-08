@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -28,7 +28,9 @@ const initialState = {
     jobs: [],
     totalJobs: 0,
     numOfPages: 1,
-    page: 1
+    page: 1,
+    stats: {},
+    monthlyApplications: 0
 
 };
 
@@ -183,10 +185,20 @@ const AppProvider = ({ children }) => {
             console.log(error.response);
             // logoutUser();
         }
-
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob }} >
+    const showStats = async () => {
+        dispatch({ type: SHOW_STATS_BEGIN });
+        try {
+            const { data } = await authFetch.get('/jobs/stats');
+            dispatch({ type: SHOW_STATS_SUCCESS, payload: { stats: data.defaultStats, monthlyApplications: data.monthlyApplications } });
+        } catch (error) {
+            console.log(error.response);
+            // logoutUser();
+        }
+    };
+
+    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats }} >
         {children}
     </AppContext.Provider>;
 };
