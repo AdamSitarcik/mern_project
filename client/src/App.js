@@ -1,5 +1,5 @@
 import { Landing, Register, Error, ProtectedRoute } from './pages/';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AddJob, AllJobs, Stats, Profile, SharedLayout } from './pages/dashboard';
 
 function App() {

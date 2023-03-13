@@ -4,8 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import 'express-async-errors';
 import morgan from 'morgan';
-import cors from 'cors';
-app.use(cors());
 
 // db and authenticateUser
 import connectDB from './db/connect.js';

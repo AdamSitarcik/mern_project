@@ -44,7 +44,7 @@ const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     // axios
-    const authFetch = axios.create({ baseURL: 'http://localhost:5000/api/v1' });
+    const authFetch = axios.create({ baseURL: '/api/v1' });
 
     authFetch.interceptors.request.use((config) => {
         config.headers['Authorization'] = `Bearer ${state.token}`;
@@ -86,7 +86,7 @@ const AppProvider = ({ children }) => {
     const setupUser = async ({ currentUser, endpoint, alertText }) => {
         dispatch({ type: SETUP_USER_BEGIN });
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/v1/auth/${endpoint}`, currentUser);
+            const { data } = await axios.post(`/api/v1/auth/${endpoint}`, currentUser);
 
             const { user, token, location } = data;
             dispatch({
@@ -161,8 +161,7 @@ const AppProvider = ({ children }) => {
             const { jobs, totalJobs, numOfPages } = data;
             dispatch({ type: GET_JOBS_SUCCESS, payload: { jobs, totalJobs, numOfPages } });
         } catch (error) {
-            console.log(error.response);
-            // logoutUser();
+            logoutUser();
         }
         clearAlert();
     };
@@ -191,8 +190,7 @@ const AppProvider = ({ children }) => {
             await authFetch.delete(`/jobs/${jobId}`);
             getJobs();
         } catch (error) {
-            console.log(error.response);
-            // logoutUser();
+            logoutUser();
         }
     };
 
@@ -202,8 +200,7 @@ const AppProvider = ({ children }) => {
             const { data } = await authFetch.get('/jobs/stats');
             dispatch({ type: SHOW_STATS_SUCCESS, payload: { stats: data.defaultStats, monthlyApplications: data.monthlyApplications } });
         } catch (error) {
-            console.log(error.response);
-            // logoutUser();
+            logoutUser();
         }
     };
 
