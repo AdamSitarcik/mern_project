@@ -17,11 +17,11 @@ function Register() {
     const { user, isLoading, showAlert, displayAlert, setupUser } = useAppContext();
 
     const toggleMember = () => {
-        setValues({ ...values, isMember: !values.isMember })
+        setValues({ ...values, isMember: !values.isMember });
     };
 
     const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value })
+        setValues({ ...values, [e.target.name]: e.target.value });
     };
 
     const onSubmit = (e) => {
@@ -67,6 +67,12 @@ function Register() {
                 <FormRow name='password' type='password' value={values.password} labelText='Password' handleChange={handleChange} />
 
                 <button type='submit' className='btn btn-block' disabled={isLoading}>Submit</button>
+
+                <button type='button' className='btn btn-block btn-hipster' disabled={isLoading} onClick={() => {
+                    setupUser({ currentUser: { email: 'testUser@test.com', password: 'secret' }, endpoint: 'login', alertText: 'Login successful' });
+                }}>
+                    {isLoading ? 'Loading...' : 'Demo user'}
+                </button>
 
                 <p>
                     {values.isMember ? 'Not a member yet?' : 'Already a member?'}

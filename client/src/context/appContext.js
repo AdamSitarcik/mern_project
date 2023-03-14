@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE } from "./actions";
 import axios from 'axios';
 
 const token = localStorage.getItem('token');
@@ -44,7 +44,7 @@ const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     // axios
-    const authFetch = axios.create({ baseURL: '/api/v1' });
+    const authFetch = axios.create({ baseURL: 'http://localhost:5000/api/v1' });
 
     authFetch.interceptors.request.use((config) => {
         config.headers['Authorization'] = `Bearer ${state.token}`;
@@ -86,7 +86,7 @@ const AppProvider = ({ children }) => {
     const setupUser = async ({ currentUser, endpoint, alertText }) => {
         dispatch({ type: SETUP_USER_BEGIN });
         try {
-            const { data } = await axios.post(`/api/v1/auth/${endpoint}`, currentUser);
+            const { data } = await axios.post(`http://localhost:5000/api/v1/auth/${endpoint}`, currentUser);
 
             const { user, token, location } = data;
             dispatch({
@@ -190,8 +190,10 @@ const AppProvider = ({ children }) => {
             await authFetch.delete(`/jobs/${jobId}`);
             getJobs();
         } catch (error) {
-            logoutUser();
+            if (error.response.status === 401) return;
+            dispatch({ type: DELETE_JOB_ERROR, payload: { msg: error.response.data.msg } });
         }
+        clearAlert();
     };
 
     const showStats = async () => {
