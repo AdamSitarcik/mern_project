@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import 'express-async-errors';
 import morgan from 'morgan';
-import cors from 'cors';
-app.use(cors());
+// import cors from 'cors';
+// app.use(cors());
 
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';

@@ -44,7 +44,7 @@ const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     // axios
-    const authFetch = axios.create({ baseURL: 'http://localhost:5000/api/v1' });
+    const authFetch = axios.create({ baseURL: '/api/v1' });
 
     authFetch.interceptors.request.use((config) => {
         config.headers['Authorization'] = `Bearer ${state.token}`;
@@ -86,7 +86,8 @@ const AppProvider = ({ children }) => {
     const setupUser = async ({ currentUser, endpoint, alertText }) => {
         dispatch({ type: SETUP_USER_BEGIN });
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/v1/auth/${endpoint}`, currentUser);
+            // const { data } = await axios.post(`http://localhost:5000/api/v1/auth/${endpoint}`, currentUser);
+            const { data } = await axios.post(`/api/v1/auth/${endpoint}`, currentUser);
 
             const { user, token, location } = data;
             dispatch({
