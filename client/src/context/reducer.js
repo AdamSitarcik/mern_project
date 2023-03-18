@@ -15,7 +15,7 @@ const reducer = (state, action) => {
     }
 
     if (action.type === SETUP_USER_SUCCESS) {
-        return { ...state, isLoading: false, token: action.payload.token, user: action.payload.user, userLocation: action.payload.location, jobLocation: action.payload.location, showAlert: true, alertType: 'success', alertText: `${action.payload.alertText}! Redirecting...` };
+        return { ...state, isLoading: false, user: action.payload.user, userLocation: action.payload.location, jobLocation: action.payload.location, showAlert: true, alertType: 'success', alertText: `${action.payload.alertText}! Redirecting...` };
     }
 
     if (action.type === SETUP_USER_ERROR) {
@@ -27,7 +27,7 @@ const reducer = (state, action) => {
     }
 
     if (action.type === LOGOUT_USER) {
-        return { ...initialState, user: null, token: null, jobLocation: '', userLocation: '' };
+        return { ...initialState, user: null, jobLocation: '', userLocation: '' };
     }
 
     if (action.type === UPDATE_USER_BEGIN) {
@@ -35,7 +35,7 @@ const reducer = (state, action) => {
     }
 
     if (action.type === UPDATE_USER_SUCCESS) {
-        return { ...state, isLoading: false, token: action.payload.token, user: action.payload.user, userLocation: action.payload.location, jobLocation: action.payload.location, showAlert: true, alertType: 'success', alertText: 'User profile updated' };
+        return { ...state, isLoading: false, user: action.payload.user, userLocation: action.payload.location, jobLocation: action.payload.location, showAlert: true, alertType: 'success', alertText: 'User profile updated' };
     }
 
     if (action.type === UPDATE_USER_ERROR) {
