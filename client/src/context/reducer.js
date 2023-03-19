@@ -1,4 +1,4 @@
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS } from "./actions";
 import { initialState } from "./appContext";
 
 const reducer = (state, action) => {
@@ -27,7 +27,7 @@ const reducer = (state, action) => {
     }
 
     if (action.type === LOGOUT_USER) {
-        return { ...initialState, user: null, jobLocation: '', userLocation: '' };
+        return { ...initialState, userLoading: false };
     }
 
     if (action.type === UPDATE_USER_BEGIN) {
@@ -120,6 +120,14 @@ const reducer = (state, action) => {
 
     if (action.type === CHANGE_PAGE) {
         return { ...state, page: action.payload.page };
+    }
+
+    if (action.type === GET_CURRENT_USER_BEGIN) {
+        return { ...state, userLoading: true, showAlert: false };
+    }
+
+    if (action.type === GET_CURRENT_USER_SUCCESS) {
+        return { ...state, userLoading: false, user: action.payload.user, userLocation: action.payload.location, jobLocation: action.payload.location };
     }
 
     throw new Error(`no such action ${action.type}`);

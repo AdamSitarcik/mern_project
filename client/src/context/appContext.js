@@ -1,9 +1,10 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useEffect } from "react";
 import reducer from "./reducer";
-import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE } from "./actions";
+import { DISPLAY_ALERT, CLEAR_ALERT, SETUP_USER_BEGIN, SETUP_USER_SUCCESS, SETUP_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, HANDLE_CHANGE, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, DELETE_JOB_ERROR, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE, GET_CURRENT_USER_BEGIN, GET_CURRENT_USER_SUCCESS } from "./actions";
 import axios from 'axios';
 
 const initialState = {
+    userLoading: true,
     isLoading: false,
     showAlert: true,
     alertText: '',
@@ -80,7 +81,8 @@ const AppProvider = ({ children }) => {
         dispatch({ type: TOGGLE_SIDEBAR });
     };
 
-    const logoutUser = () => {
+    const logoutUser = async () => {
+        await authFetch.get('/auth/logout');
         dispatch({ type: LOGOUT_USER });
     };
 
@@ -187,7 +189,21 @@ const AppProvider = ({ children }) => {
         dispatch({ type: CHANGE_PAGE, payload: { page } });
     };
 
-    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats, clearFilters, changePage }} >
+    const getCurrentUser = async () => {
+        dispatch({ type: GET_CURRENT_USER_BEGIN });
+        try {
+            const { data } = await authFetch.get('/auth/getCurrentUser');
+            const { user, location } = data;
+            dispatch({ type: GET_CURRENT_USER_SUCCESS, payload: { user, location } });
+        } catch (error) {
+            if (error.response.status === 401) return;
+            logoutUser();
+        }
+    };
+
+    useEffect(() => { getCurrentUser(); }, []);
+
+    return <AppContext.Provider value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats, clearFilters, changePage, getCurrentUser }} >
         {children}
     </AppContext.Provider>;
 };
